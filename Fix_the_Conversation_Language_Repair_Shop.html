@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fix the Conversation! | The Language Repair Shop</title>
+<style>
+:root{--purple:#702b94;--teal:#008f92;--ink:#23324d;--cream:#fff9ef;--pink:#fce9f4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 5%,#d9f6f0,transparent 36%),radial-gradient(circle at 90% 70%,#f7def3,transparent 40%),var(--cream);font:16px/1.55 system-ui,Arial,sans-serif;color:var(--ink);min-height:100vh}
+main{max-width:800px;margin:auto;padding:24px 16px 45px}.panel{background:white;border:3px solid #e7d5ef;border-radius:24px;padding:clamp(18px,4vw,36px);box-shadow:0 12px 35px #45235b18}.top{text-align:center;margin-bottom:20px}.eyebrow{color:var(--teal);font-weight:800;letter-spacing:.12em;font-size:.78rem}.title{font-size:clamp(1.9rem,5vw,3.2rem);line-height:1.1;color:var(--purple);margin:7px 0}.sub{margin:8px auto;max-width:580px}.pill{display:inline-block;background:#e6f7f5;border-radius:50px;padding:6px 14px;font-weight:700;color:#006a70}.toolbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin:16px 0}.stat{background:#f5ecfa;border-radius:14px;padding:8px 14px;font-weight:800}.progress{height:12px;background:#e9e2ef;border-radius:99px;overflow:hidden;margin:16px 0}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--teal),#6cba9b);transition:width .25s}.dialogue{background:#eef8f8;border-left:5px solid var(--teal);padding:18px;border-radius:14px;margin:18px 0}.dialogue p{margin:7px 0}.choices{display:grid;gap:11px;margin:17px 0}.choice{width:100%;background:white;border:2px solid #d9cbe3;color:var(--ink);text-align:left;padding:14px 16px;border-radius:13px;font:inherit;cursor:pointer;transition:.15s}.choice:hover:not(:disabled),.choice:focus-visible{border-color:var(--purple);background:#faf3ff;outline:none}.choice:disabled{cursor:default}.choice.correct{background:#e1f7e9;border-color:#15803d}.choice.wrong{background:#fff0f0;border-color:#cf3f48}.btn{border:0;border-radius:13px;background:var(--purple);color:white;padding:12px 23px;font:inherit;font-weight:800;cursor:pointer}.btn:hover{filter:brightness(1.1)}.btn.secondary{background:var(--teal)}.btn:disabled{opacity:.5;cursor:default}.feedback{padding:14px 16px;border-radius:12px;background:#fff1d9;margin:12px 0}.feedback.success{background:#e3f7eb}.hidden{display:none!important}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.small{font-size:.88rem;color:#59637b}.center{text-align:center}.stars{font-size:2.5rem;letter-spacing:.12em}.footer{text-align:center;margin-top:22px;font-size:.78rem;color:#59637b}.timer{font-variant-numeric:tabular-nums}.toggle{display:flex;align-items:center;gap:7px;cursor:pointer}input[type=checkbox]{accent-color:var(--purple);width:17px;height:17px}@media(prefers-reduced-motion:reduce){*{transition:none!important}}@media print{.actions,.toggle{display:none!important}}
+</style>
+</head>
+<body><main>
+<header class="top"><div class="eyebrow">PLAY, THINK, CREATE! · GAME 21</div><h1 class="title">🛠️ Fix the Conversation!</h1><p class="sub">The Language Repair Shop · Spot the misunderstanding. Choose the best repair. Become a Master Language Doctor!</p><span class="pill">10 missions · 10 points each</span></header>
+<section class="panel" id="intro">
+<h2>Welcome to the Repair Shop!</h2><p>Each conversation has a problem: an unclear message, a grammar mistake or an impolite reply. Select the <strong>best response</strong> to repair it.</p>
+<p>You can earn <strong>100 points</strong>. After each answer, you will see an explanation. You can try again in a new game.</p>
+<label class="toggle"><input type="checkbox" id="timed"> Challenge mode: 30 seconds per mission</label>
+<div class="actions"><button class="btn" id="start">Start repairing →</button></div>
+</section>
+<section class="panel hidden" id="game" aria-live="polite">
+<div class="toolbar"><div class="stat" id="mission">Mission 1 / 10</div><div class="stat" id="score">Score: 0 / 100</div><div class="stat timer hidden" id="timer">⏱ 30 s</div></div>
+<div class="progress" aria-label="Game progress"><div id="bar"></div></div>
+<h2 id="heading"></h2><div class="dialogue" id="dialogue"></div>
+<p><strong>Choose the best repair:</strong></p><div class="choices" id="choices"></div>
+<div id="feedback" class="feedback hidden" role="status"></div>
+<div class="actions"><button class="btn hidden" id="next">Next mission →</button></div>
+</section>
+<section class="panel hidden center" id="end">
+<div class="stars">🏆</div><h2 id="resultTitle">Repair Shop Complete!</h2><p id="resultScore"></p><p id="resultMessage"></p>
+<div class="actions" style="justify-content:center"><button class="btn" id="again">Play again ↻</button><button class="btn secondary" id="print">Print result</button></div>
+</section>
+<div class="footer">The Language Repair Shop · English classroom game · Works offline</div>
+</main>
+<script>
+"use strict";
+const missions=[
+{title:"A Helping Hand",dialogue:[["Anna","Could you give me a hand with this project?"],["Ben","Why? You've already got two hands!"]],options:["I don't like your hands.","Of course! How can I help?","You should use your own hands."],correct:1,explain:"“Give me a hand” is an idiom meaning “help me”. Ben should offer help."},
+{title:"A Polite Request",dialogue:[["Maya","Open the window. Now."],["Alex","That sounds rather rude."]],options:["Could you open the window, please?","Window! Quickly!","You must open it."],correct:0,explain:"“Could you …, please?” makes the request more polite."},
+{title:"The Wrong Tense",dialogue:[["Sam","I have seen that film yesterday."],["Rita","Really? Was it good?"]],options:["I am seeing that film yesterday.","I saw that film yesterday.","I have saw that film yesterday."],correct:1,explain:"Use the past simple with a finished time expression such as “yesterday”."},
+{title:"A Confusing Answer",dialogue:[["Liam","How long have you lived here?"],["Nora","Since three years."]],options:["For three years.","At three years.","From three years."],correct:0,explain:"Use “for” with a duration (three years) and “since” with a starting point (2023)."},
+{title:"The Missing Meaning",dialogue:[["Ella","I'm feeling under the weather."],["Leo","Take an umbrella, then!"]],options:["The weather forecast is sunny.","I'm sorry you're not feeling well.","You should go outside."],correct:1,explain:"“Under the weather” means feeling ill or unwell."},
+{title:"A Better Apology",dialogue:[["Tom","You interrupted me during my presentation."],["Kim","So what?"]],options:["That's your problem.","Sorry for interrupting. Please continue.","You talk too much."],correct:1,explain:"Acknowledge the problem, apologise and invite the speaker to continue."},
+{title:"Make It Clear",dialogue:[["Teacher","Please hand in your assignments by Friday."],["Student","I don't get it."]],options:["Could you clarify what we need to submit?","Your instructions make no sense.","Never mind."] ,correct:0,explain:"Asking for clarification politely is an effective communication strategy."},
+{title:"The Double Negative",dialogue:[["Owen","I don't know nothing about it."],["Ava","Are you sure?"]],options:["I doesn't know anything about it.","I don't know anything about it.","I don't knew nothing about it."],correct:1,explain:"In standard English, “don't know anything” expresses the negative clearly."},
+{title:"A Friendly Disagreement",dialogue:[["Zoe","I think homework should be optional."],["Max","That's a stupid idea."]],options:["You're completely wrong.","I see your point, but I disagree because practice helps.","Stop talking."],correct:1,explain:"Respectful disagreement acknowledges another view and gives a reason."},
+{title:"The Final Repair",dialogue:[["Noah","Can you tell me where is the library?"],["Ivy","Sure! It's next to the gym."]],options:["Can you tell me where the library is?","Can you tell me where does the library is?","Can you tell me where the library be?"],correct:0,explain:"In an indirect question, use statement word order: “where the library is”."}
+];
+let index=0,points=0,answered=false,seconds=30,interval=null,timed=false;
+const $=id=>document.getElementById(id);
+function show(id){["intro","game","end"].forEach(x=>$(x).classList.toggle("hidden",x!==id))}
+function stopTimer(){if(interval!==null){clearInterval(interval);interval=null}}
+function start(){stopTimer();index=0;points=0;timed=$("timed").checked;show("game");render()}
+function render(){stopTimer();answered=false;const m=missions[index];$("mission").textContent=`Mission ${index+1} / ${missions.length}`;$("score").textContent=`Score: ${points} / 100`;$("bar").style.width=`${index/missions.length*100}%`;$("heading").textContent=m.title;$("dialogue").replaceChildren();m.dialogue.forEach(([name,words])=>{const p=document.createElement("p"),b=document.createElement("strong");b.textContent=name+": ";p.append(b,document.createTextNode(words));$("dialogue").append(p)});$("choices").replaceChildren();m.options.forEach((opt,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=`${"ABC"[i]}. ${opt}`;b.onclick=()=>choose(i);$("choices").append(b)});$("feedback").className="feedback hidden";$("feedback").textContent="";$("next").classList.add("hidden");$("timer").classList.toggle("hidden",!timed);if(timed){seconds=30;tick();interval=setInterval(()=>{seconds--;tick();if(seconds<=0){stopTimer();choose(-1)}},1000)}}
+function tick(){$("timer").textContent=`⏱ ${seconds} s`}
+function choose(choice){if(answered)return;answered=true;stopTimer();const m=missions[index];const correct=choice===m.correct;if(correct)points+=10;const buttons=[...$("choices").children];buttons.forEach((b,i)=>{b.disabled=true;if(i===m.correct)b.classList.add("correct");else if(i===choice)b.classList.add("wrong")});$("feedback").className="feedback"+(correct?" success":"");$("feedback").textContent=(correct?"✓ Excellent! +10 points. ":choice===-1?"⏰ Time is up. ":"Not quite. ")+m.explain;$("score").textContent=`Score: ${points} / 100`;$("bar").style.width=`${(index+1)/missions.length*100}%`;$("next").textContent=index===missions.length-1?"See my result →":"Next mission →";$("next").classList.remove("hidden")}
+function next(){if(index<missions.length-1){index++;render()}else{show("end");$("resultScore").textContent=`Your score: ${points} / 100`;$("resultTitle").textContent=points>=80?"🏆 Master Language Doctor!":"Repair Shop Complete!";$("resultMessage").textContent=points===100?"Perfect repair work! Every conversation is fixed.":points>=80?"Excellent work! You communicate clearly and politely.":points>=50?"Good progress! Review the explanations and try again.":"Keep practising! Every repair makes your English stronger."}}
+$("start").onclick=start;$("again").onclick=start;$("next").onclick=next;$("print").onclick=()=>window.print();
+</script></body></html>
